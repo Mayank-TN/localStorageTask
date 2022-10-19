@@ -356,13 +356,38 @@ function onSubmit(e) {
 
     // Remove error after 3 seconds
     setTimeout(() => msg.remove(), 3000);
-  } else {
+  } 
+  else {
+    if(localStorage.getItem(emailInput.value)!== null){
+      removeUserFromScreen(emailInput.value);
+    }
+    
+
     // Create new list item with user
+
     const li = document.createElement('li');
+    li.id = emailInput.value;
+
+    
 
     // Add text node with input values
     li.appendChild(document.createTextNode(`${nameInput.value}: ${emailInput.value}`));
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    const editBtn = document.createElement('button')
+    editBtn.textContent = 'Edit' ;
+    li.appendChild(deleteBtn);
+    li.appendChild(editBtn);
+    deleteBtn.addEventListener('click', function(){
+      userList.removeChild(deleteBtn.parentNode)
+    });
 
+    editBtn.addEventListener('click',function(){
+      const arr = editBtn.parentNode.firstChild.textContent.split(': ')
+      nameInput.value = arr[0];
+      emailInput.value = arr[1];
+      userList.removeChild(editBtn.parentNode)
+    })
 
     // Add HTML
     // li.innerHTML = `<strong>${nameInput.value}</strong>e: ${emailInput.value}`;
@@ -374,12 +399,23 @@ function onSubmit(e) {
         name : nameInput.value,
         email : emailInput.value
     }
+   
+
     myObj = JSON.stringify(myObj)
-    localStorage.setItem(`userDetails${emailInput.value}` , myObj);
+    localStorage.setItem(`${emailInput.value}` , myObj);
 
     // Clear fields
     nameInput.value = '';
     emailInput.value = '';
   }
 }
+
+function removeUserFromScreen(email){
+  const child = document.getElementById(`${email}`)
+  if(child){
+    userList.removeChild(child)
+  }
+}
+
+
 
