@@ -370,7 +370,12 @@ function onSubmit(e) {
     // Append to ul
     userList.appendChild(li);
 
-    localStorage.setItem('userDetails' , `${nameInput.value}: ${emailInput.value}`);
+    let myObj = {
+        name : nameInput.value,
+        email : emailInput.value
+    }
+    myObj = JSON.stringify(myObj)
+    localStorage.setItem('userDetails' , myObj);
 
     // Clear fields
     nameInput.value = '';
