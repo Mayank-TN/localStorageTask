@@ -374,12 +374,22 @@ function onSubmit(e) {
     li.appendChild(document.createTextNode(`${nameInput.value}: ${emailInput.value}`));
     const deleteBtn = document.createElement('button');
     deleteBtn.textContent = 'Delete';
+    deleteBtn.style.backgroundColor = 'red';
+    deleteBtn.style.margin = '0 20px'
+    deleteBtn.style.float = 'right'
     const editBtn = document.createElement('button')
+    editBtn.style.backgroundColor = 'skyblue'
+    editBtn.style.float = 'right';
     editBtn.textContent = 'Edit' ;
     li.appendChild(deleteBtn);
     li.appendChild(editBtn);
     deleteBtn.addEventListener('click', function(){
+      const arr = deleteBtn.parentNode.firstChild.textContent.split(': ')
+      nameInput.value = arr[0];
+      emailInput.value = arr[1];
       userList.removeChild(deleteBtn.parentNode)
+      localStorage.removeItem(arr[1]);
+
     });
 
     editBtn.addEventListener('click',function(){
@@ -387,7 +397,16 @@ function onSubmit(e) {
       nameInput.value = arr[0];
       emailInput.value = arr[1];
       userList.removeChild(editBtn.parentNode)
+      localStorage.removeItem(arr[1])
+      const editChangesButton = document.getElementById('btn')
+      editChangesButton.value = 'Edit Changes'
+      editChangesButton.addEventListener('click' , function(){
+        editChangesButton.value = 'Submit'
+      })
     })
+
+
+
 
     // Add HTML
     // li.innerHTML = `<strong>${nameInput.value}</strong>e: ${emailInput.value}`;
