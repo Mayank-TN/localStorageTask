@@ -375,7 +375,7 @@ function onSubmit(e) {
         email : emailInput.value
     }
     myObj = JSON.stringify(myObj)
-    localStorage.setItem('userDetails' , myObj);
+    localStorage.setItem(`userDetails${emailInput.value}` , myObj);
 
     // Clear fields
     nameInput.value = '';
