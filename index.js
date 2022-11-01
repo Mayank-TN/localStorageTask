@@ -1,17 +1,21 @@
+
+const url = 'https://crudcrud.com/api/173a35ae00b445abaa770bc88ee5e297/userDetails/'
 const myForm = document.querySelector('#my-form');
 const nameInput = document.querySelector('#name');
 const emailInput = document.querySelector('#email');
 const msg = document.querySelector('.msg');
 const userList = document.querySelector('#users');
+const btn = document.getElementById('btn')
 
-window.addEventListener('DOMContentLoaded', showUserDetails());
+window.addEventListener('DOMContentLoaded', showUserDetails);
+
 
 // Listen for form submit
-myForm.addEventListener('submit', onSubmit);
+btn.addEventListener('click', onSubmit);
+
 
 async function onSubmit(e) {
-  e.preventDefault();
-  
+  e.preventDefault()
   if(nameInput.value === '' || emailInput.value === '') {
     // alert('Please enter all fields');
     msg.classList.add('error');
@@ -28,8 +32,8 @@ async function onSubmit(e) {
         mail : emailInput.value
     }
    
-    const response = await axios.post("https://crudcrud.com/api/9d460c69a3014fbcadc2a53db862734e/userDetails" , myObj)
-    console.log(response.data);
+    const response = await axios.post(url , myObj)
+    console.log(response)
     showUserDetails()
 
     // Clear fields
@@ -41,7 +45,7 @@ async function onSubmit(e) {
 
 async function showUserDetails(){
     userList.innerHTML = "";
-    const userDetails = await axios.get("https://crudcrud.com/api/9d460c69a3014fbcadc2a53db862734e/userDetails")
+    const userDetails = await axios.get(url)
 
     userDetails.data.forEach(element => {
         const li = document.createElement('li')
@@ -61,7 +65,7 @@ async function showUserDetails(){
         li.appendChild(editBtn);
         const id = element._id;
         deleteBtn.addEventListener('click' , ()=>deleteUser(id))
-        console.log(li)
+        editBtn.addEventListener('click' , ()=>editUser(id))
         userList.appendChild(li)
         
         
@@ -70,9 +74,42 @@ async function showUserDetails(){
 
 async function deleteUser(id){
     
-    const deleteUser = await axios.delete('https://crudcrud.com/api/9d460c69a3014fbcadc2a53db862734e/userDetails/'+id)
+    const deleteUser = await axios.delete(url+id)
     console.log(deleteUser)
     showUserDetails()
+}
+
+
+async function editUser(id){
+    const userDetails = await axios.get(url +id)
+    nameInput.value = userDetails.data.name;
+    emailInput.value = userDetails.data.mail;
+    btn.style.display = 'none'
+    const editBtnForm = document.createElement('button')
+    editBtnForm.textContent = "EDIT CHANGES"
+    myForm.appendChild(editBtnForm)
+    editBtnForm.addEventListener('click' , (e)=>editUserDetails(e,id , editBtnForm))
+
+}
+
+async function editUserDetails(e , id ,editBtnForm){
+    e.preventDefault();
+    
+    const obj = {
+        name : nameInput.value ,
+        mail : emailInput.value
+    }
+    console.log(obj)
+    console.log(id)
+    const response = await axios.put(url +id , obj)
+    console.log(response)
+    btn.value = 'Submit'
+    nameInput.value = ""
+    emailInput.value = ""
+    showUserDetails()
+    myForm.removeChild(editBtnForm)
+    btn.style.display = 'inline'
+    
 }
 
 
